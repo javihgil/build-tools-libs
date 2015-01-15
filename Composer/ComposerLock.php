@@ -66,6 +66,7 @@ class ComposerLock
 
         // convert packages into arrays
         $lockData['packages'] = array();
+        /** @var ComposerJson $v */
         foreach ($this->lockArray['packages'] as $v) {
             $packageData = $v->getDataArray();
 
