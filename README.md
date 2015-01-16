@@ -7,7 +7,7 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
 **Include as git submodule**
 
 ```bash
-    git submodule add git@github.com:javihgil/build-tools-libs.git lib
+    $ git submodule add git@github.com:javihgil/build-tools-libs.git lib
 ```
     
 **Usage in phing**
