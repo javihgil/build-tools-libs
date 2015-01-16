@@ -17,7 +17,7 @@ use Task\ActionTaskInterface;
 /**
  * Class DevTask
  *
- * @author Javi Hernández <javihgil@gmail.com>
+ * @author Javi H. Gil <https://github.com/javihgil>
  */
 class DevTask extends AbstractTask implements ActionTaskInterface
 {
