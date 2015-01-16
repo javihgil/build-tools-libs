@@ -26,7 +26,7 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
     <taskdef name="modulei" classname="lib.Phing.tasks.ModuleIteratorTask" />
     <taskdef name="package" classname="lib.Phing.tasks.PackageTask" />
     <taskdef name="rm"      classname="lib.Phing.tasks.RmTask" />
-    <taskdef name="s3repo"  classname="lib.Phing.tasks.S3RepositoryTask" />
+    <taskdef name="repo"    classname="lib.Phing.tasks.RepositoryTask" />
     <taskdef name="symfony" classname="lib.Phing.tasks.SymfonyTask" />
     <taskdef name="test"    classname="lib.Phing.tasks.TestTask" />
 ```
