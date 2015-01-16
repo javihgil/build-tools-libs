@@ -12,7 +12,7 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
     
 **Usage in phing**
 
-    ```xml
+```xml
     <!-- types -->
     <typedef name="modules" classname="lib.Phing.types.Modules" />
     <typedef name="module"  classname="lib.Phing.types.Module" />
@@ -29,4 +29,4 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
     <taskdef name="s3repo"  classname="lib.Phing.tasks.S3RepositoryTask" />
     <taskdef name="symfony" classname="lib.Phing.tasks.SymfonyTask" />
     <taskdef name="test"    classname="lib.Phing.tasks.TestTask" />
-    ```
+```
