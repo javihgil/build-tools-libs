@@ -16,7 +16,7 @@ use Task\AbstractTask;
 /**
  * Class InfoTask
  *
- * @author Javi Hernández <javihgil@gmail.com>
+ * @author   Javi H. Gil <https://github.com/javihgil>
  */
 class InfoTask extends AbstractTask
 {
