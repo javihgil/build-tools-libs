@@ -26,7 +26,6 @@ interface ActionTaskInterface
 
     /**
      * @param string $action
-     * @return $this
      */
     public function setAction($action);
 }
