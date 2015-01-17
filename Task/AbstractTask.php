@@ -20,6 +20,31 @@ namespace Task;
 abstract class AbstractTask extends \Task
 {
     /**
+     * @var string
+     */
+    protected $if;
+
+    /**
+     * @param string $if
+     */
+    public function setIf($if)
+    {
+        $this->if = $if;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function testIf()
+    {
+        if ($this->if === null) {
+            return false;
+        }
+
+        return (bool)$this->project->getProperty($this->if);
+    }
+
+    /**
      * @param $message
      * @param $command
      * @param array $options

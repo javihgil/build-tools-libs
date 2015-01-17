@@ -29,11 +29,6 @@ class TestTask extends AbstractTask
     /**
      * @var string
      */
-    protected $if;
-
-    /**
-     * @var string
-     */
     protected $bin;
 
     /**
@@ -101,14 +96,6 @@ class TestTask extends AbstractTask
     public function setFailbuild($failbuild)
     {
         $this->failbuild = $failbuild;
-    }
-
-    /**
-     * @param string $if
-     */
-    public function setIf($if)
-    {
-        $this->if = $if;
     }
 
     /**
@@ -195,18 +182,6 @@ class TestTask extends AbstractTask
                     throw new \BuildException("'$this->method' action is not defined in TestTask");
             }
         }
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function testIf()
-    {
-        if ($this->if === null) {
-            return false;
-        }
-
-        return (bool)$this->project->getProperty($this->if);
     }
 
     /**
