@@ -31,6 +31,27 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
     <taskdef name="test"    classname="lib.Phing.tasks.TestTask" />
 ```
 
+## Types
+
+### Module types
+
+**Example**
+
+```xml
+    <modules id="modules">
+        <module name="module1"/>
+        <module name="module2"/>
+    </modules>
+```
+
+**Usage**
+
+```xml
+    <modulei action="phing" modulesrefid="modules" task="target-name">
+        <arg ... />
+    </modulei>
+```
+
 ## Tasks
 
 ### Call task
@@ -176,27 +197,3 @@ Removes a file, directory or package, using the *rm* linux command.
 ### Test task
 
 *TODO*
-
-
-## Types
-
-### Module types
-
-**Example**
-
-```xml
-    <modules id="modules">
-        <module name="module1"/>
-        <module name="module2"/>
-    </modules>
-```
-
-**Usage**
-
-```xml
-    <modulei action="phing" modulesrefid="modules" task="target-name">
-        <arg ... />
-    </modulei>
-```
-
-
