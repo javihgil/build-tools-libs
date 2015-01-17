@@ -72,31 +72,57 @@ than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task.
 
 ### Composer task
 
-#### Actions
-
-**Example**
-
-**Parameters**
+*TODO*
 
 ### Dev task
 
-#### Actions
-
-##### Create Symlink
+#### Create Symlink action
 
 **Example**
 
+```xml
+    <dev action="create-symlink" localDir="~/javihgil/test-bundle" vendorDir="vendor/javihgil/test-bundle" />
+```
+
 **Parameters**
 
-##### Remove Symlink
+- action: *create-symlink*
+- localDir: (string) symlink target path
+- vendorDir: (string) symlink location path
+
+#### Remove Symlink action
 
 **Example**
 
+```xml
+    <dev action="remove-symlink" vendorDir="vendor/javihgil/test-bundle" />
+```
+
 **Parameters**
+
+- action: *remove-symlink*
+- vendorDir: (string) symlink location path
 
 ### Info task
 
-*TODO*
+Shows some information in phing log.
+
+**Show property example**
+
+```xml
+    <info show="property" property="composer.name"/>
+```
+
+**Show target example**
+
+```xml
+    <info show="target"/>
+```
+
+**Parameters**
+
+- show: (string) property|target
+- property: (string) name of the property to show
 
 ### Module Iterator task
 
@@ -108,11 +134,7 @@ than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task.
 
 ### Repository task
 
-#### Actions
-
-**Example**
-
-**Parameters**
+*TODO*
 
 ### Rm task
 
@@ -120,17 +142,8 @@ than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task.
 
 ### Symfony task
 
-#### Actions
-
-**Example**
-
-**Parameters**
+*TODO*
 
 ### Test task
 
-#### Actions
-
-**Example**
-
-**Parameters**
-
+*TODO*
