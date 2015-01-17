@@ -93,7 +93,146 @@ than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task.
 
 ### Composer task
 
-*TODO*
+#### Get action
+
+Gets *composer.phar* file. If already exits, executes self-update.
+
+**Example**
+
+```xml
+    <composr action="get" />
+```
+
+**Parameters**
+
+- pharFile: (string)
+
+#### Self Update action
+
+**Example**
+
+```xml
+    <composr action="self-update" />
+```
+
+**Parameters**
+
+- pharFile: (string)
+
+#### Install action
+
+**Example**
+
+```xml
+    <composr action="install" dev="true" />
+```
+
+**Parameters**
+
+- pharFile: (string)
+- dir: (string)
+- dev: (bool, default false)
+- optimizeautoloader: (bool, default false)
+- preferDist: (bool, default true)
+- noProgress: (bool, default true)
+- profile: (bool, default true)
+- verbosity: (string, default 'vv')
+
+#### Check Release Dependencies action
+
+**Example**
+
+```xml
+    <composr action="check-release-dependencies" />
+```
+
+**Parameters**
+
+- jsonFile: (string)
+
+#### Check Lock Updated action
+
+**Example**
+
+```xml
+    <composr action="check-lock-updated" />
+```
+
+**Parameters**
+
+- jsonFile: (string)
+- lockFile: (string)
+
+#### Check Development Version action
+
+**Example**
+
+```xml
+    <composr action="check-dev-version"/>
+```
+
+**Parameters**
+
+- jsonFile: (string)
+
+#### Get Version action
+
+**Example**
+
+```xml
+    <composr action="get-version" />
+```
+
+**Parameters**
+
+- jsonFile (string)
+- property: (string)
+- release: (bool, default false)
+- increment: (bool, default false)
+
+#### Version Update action
+
+**Example**
+
+```xml
+    <composr action="version-update" version="${release.version}" forceVersionType="release" />
+```
+
+**Parameters**
+
+- jsonFile: (string)
+- version: (string)
+- forceVersionType: (string) dev|release
+
+#### Dependency Update action
+
+**Example**
+
+```xml
+    <composr action="dependency-update" />
+```
+
+**Parameters**
+
+- jsonFile: (string)
+- version: (string)
+- dependencyGroup: (string)
+- dependencyPackage: (string)
+- dependencyPattern: (string)
+
+#### Export action
+
+**Example**
+
+```xml
+    <composr action="export" value="version" property="composer.version" />
+```
+
+**Parameters**
+
+- jsonFile: (string)
+- value: (string) name|version|type
+- property: (string) property name to export into
 
 ### Dev task
 
