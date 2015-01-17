@@ -11,6 +11,8 @@
 
 namespace Task;
 
+use Console\Command;
+
 /**
  * Class AbstractTask
  *
@@ -66,9 +68,7 @@ abstract class AbstractTask extends \Task
         $execCommand = "$command $options";
         $this->log("  $ $execCommand", $logLevel);
 
-        ob_start();
-        $returnedString = system($execCommand, $result);
-        ob_end_clean();
+        list($returnedString, $result) = Command::exec($execCommand);
 
         if ($returnResult) {
             echo $returnedString;
