@@ -30,3 +30,99 @@ This libraries provides features for [build-tools](https://github.com/javihgil/b
     <taskdef name="symfony" classname="lib.Phing.tasks.SymfonyTask" />
     <taskdef name="test"    classname="lib.Phing.tasks.TestTask" />
 ```
+
+## Tasks
+
+### Call task
+
+Executes a phing target. Extends original [phingcall](http://www.phing.info/docs/guide/stable/apbs25.html) 
+task, except that it's execution is optional when not *required*.
+
+**Example**
+
+```xml
+    <call target="target-name" required="true"/>
+```
+
+**Parameters**
+
+- target: (string) name of target to execute.
+- required: (bool, default false) if target definition is required.
+- inheritAll: (bool, default: true)
+- inheritRefs: (bool, default: false)
+
+### Code Copy task
+
+Copies code from source directory to target directory. Internally uses rsync command, so it's quicker 
+than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task. 
+
+**Example**
+
+```xml
+    <ccopy from="src" to="target/build" stats="true" logFile="target/build.copy.log" excludes="build.xml"/>
+```
+
+**Parameters**
+
+- from: (string) source directory
+- to: (string) target directory
+- logFile: (string) log file to store the command result
+- excludes: (string) exclude files and directories.
+- stats: (bool, default false) show process stats at the end of execution.
+
+### Composer task
+
+#### Actions
+
+**Example**
+
+**Parameters**
+
+### Dev task
+
+#### Actions
+
+**Example**
+
+**Parameters**
+
+### Info task
+
+*TODO*
+
+### Module Iterator task
+
+*TODO*
+
+### Package task
+
+*TODO*
+
+### Repository task
+
+#### Actions
+
+**Example**
+
+**Parameters**
+
+### Rm task
+
+*TODO*
+
+### Symfony task
+
+#### Actions
+
+**Example**
+
+**Parameters**
+
+### Test task
+
+#### Actions
+
+**Example**
+
+**Parameters**
+
