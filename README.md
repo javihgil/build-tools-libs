@@ -129,8 +129,8 @@ Gets *composer.phar* file. If already exits, executes self-update.
 
 **Parameters**
 
-- pharFile: (string)
-- dir: (string)
+- pharFile: (string, default 'composer.phar')
+- dir: (string, default '.')
 - dev: (bool, default false)
 - optimizeautoloader: (bool, default false)
 - preferDist: (bool, default true)
