@@ -176,3 +176,27 @@ Removes a file, directory or package, using the *rm* linux command.
 ### Test task
 
 *TODO*
+
+
+## Types
+
+### Module types
+
+**Example**
+
+```xml
+    <modules id="modules">
+        <module name="module1"/>
+        <module name="module2"/>
+    </modules>
+```
+
+**Usage**
+
+```xml
+    <modulei action="phing" modulesrefid="modules" task="target-name">
+        <arg ... />
+    </modulei>
+```
+
+
