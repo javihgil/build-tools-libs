@@ -309,6 +309,85 @@ Creates a code package.
 
 ### Repository task
 
+Repository task allows to manage a private repository for composer packages. It's possible to download 
+custom dependencies and stores build and release packages.
+
+**Configuration**
+
+```xml
+    <property name="private.repository" value="true"/>
+    <property name="private.repository.driver" value="s3"/>
+    <property name="private.dependencies.regex" value="^javihgil\/"/>
+```
+
+**S3 Repository configuration**
+    
+```xml
+    <property name="s3.build.bucket.path" value="bucket.name/builds"/>
+    <property name="s3.release.bucket.path" value="bucket.name/releases"/>
+    <property name="s3.cmd.bin" value="/usr/bin/s3cmd"/>
+```
+
+#### Download Dependencies action
+
+**Example**
+
+```xml
+    <repo action="download-deps" driver="s3" packageRegex="^mycompany\/" />
+```
+
+**Parameters**
+
+- driver
+- packageRegex
+- jsonFile
+- localRepositoryDir
+
+#### Check Update action
+
+**Example**
+
+```xml
+    <repo action="check-update" driver="s3" />
+```
+
+**Parameters**
+
+- driver
+- lockFile
+
+#### Upload Build action
+
+**Example**
+
+```xml
+    <repo action="upload-build" file="${targetPath}/build.zip" sha1="true" driver="s3" />
+```
+
+**Parameters**
+
+- jsonFile
+- driver
+- file
+- sha1
+
+#### Upload Release action
+
+**Example**
+
+```xml
+    <repo action="upload-release" file="${targetPath}/release.zip" sha1="true" driver="s3" />
+```
+
+**Parameters**
+
+- jsonFile
+- driver
+- file
+- sha1
+
+#### Download action
+
 *TODO*
 
 ### Rm task
