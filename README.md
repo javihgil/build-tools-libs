@@ -82,6 +82,14 @@ than phing's [copy](http://www.phing.info/docs/guide/stable/apbs09.html) task.
 
 #### Actions
 
+##### Create Symlink
+
+**Example**
+
+**Parameters**
+
+##### Remove Symlink
+
 **Example**
 
 **Parameters**
