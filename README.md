@@ -2,6 +2,8 @@
 
 This libraries provides features for [build-tools](https://github.com/javihgil/build-tools) package.
 
+[TOC]
+
 ## Usage in other projects
 
 **Include as git submodule**
