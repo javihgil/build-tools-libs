@@ -130,7 +130,22 @@ Shows some information in phing log.
 
 ### Package task
 
-*TODO*
+Creates a code package.
+
+**Example**
+
+```xml
+    <package format="zip" dir="target/build" file="build.zip" log="build.zip.log" sha1="true" />
+```
+
+**Parameters**
+
+- format: (string) zip|tgz
+- dir: (string) source directory
+- file: (string) package file
+- log: (string) log file
+- sha1: (bool, default false) create package sha1 file or not
+- md5: (bool, default false) create package md5 file or not
 
 ### Repository task
 
@@ -138,7 +153,21 @@ Shows some information in phing log.
 
 ### Rm task
 
-*TODO*
+Removes a file, directory or package, using the *rm* linux command.
+
+**Example**
+
+```xml
+    <rm file="target/build/composer.lock"/>
+    <rm dir="target/build/target"/>
+    <rm pattern="${targetPath}/build*" />
+```
+
+**Parameters**
+
+- dir: (string) directory to remove
+- file: (string) file to remove
+- pattern: (string) expression to remove files or directories
 
 ### Symfony task
 
