@@ -59,7 +59,8 @@ abstract class AbstractTask extends \Task
         $command,
         $options = array(),
         $logLevel = \Project::MSG_INFO,
-        $returnResult = true
+        $returnResult = true,
+        $bufferResponse = true
     ) {
         if ($message) {
             $this->log($message, \Project::MSG_INFO);
@@ -68,7 +69,7 @@ abstract class AbstractTask extends \Task
         $execCommand = "$command $options";
         $this->log("  $ $execCommand", $logLevel);
 
-        list($returnedString, $result) = Command::exec($execCommand);
+        list($returnedString, $result) = Command::exec($execCommand, $bufferResponse);
 
         if ($returnResult) {
             echo $returnedString;

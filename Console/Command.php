@@ -21,13 +21,20 @@ class Command
 {
     /**
      * @param string $execCommand
+     * @param bool   $bufferResponse
      * @return array [returnedString, result]
      */
-    public static function exec($execCommand)
+    public static function exec($execCommand, $bufferResponse = true)
     {
-        ob_start();
-        $returnedString = system($execCommand, $result);
-        ob_end_clean();
+        if ($bufferResponse) {
+            ob_start();
+        }
+
+        $lastLine = system($execCommand, $result);
+
+        if ($bufferResponse) {
+            $returnedString = ob_get_clean();
+        }
 
         return array($returnedString, $result);
     }
