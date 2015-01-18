@@ -42,10 +42,10 @@ class ComposerLock
 
         // convert packages into composerJson object
         foreach ($this->lockArray['packages'] as $i => $package) {
-            $this->lockArray['packages'][$i] = new ComposerJson(null, json_encode($package));
+            $this->lockArray['packages'][$i] = new ComposerJson(json_encode($package));
         }
         foreach ($this->lockArray['packages-dev'] as $i => $package) {
-            $this->lockArray['packages-dev'][$i] = new ComposerJson(null, json_encode($package));
+            $this->lockArray['packages-dev'][$i] = new ComposerJson(json_encode($package));
         }
     }
 
