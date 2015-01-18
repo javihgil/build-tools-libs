@@ -612,7 +612,14 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
             $options[] = '--optimize-autoloader';
         }
 
-        $result = $this->exec("Composer install", "php -d memory_limit=-1 $this->pharFile install", $options);
+        $result = $this->exec(
+            "Composer install",
+            "php -d memory_limit=-1 $this->pharFile install",
+            $options,
+            \Project::MSG_INFO,
+            true,
+            false // no buffer
+        );
 
         if ((bool)$result) {
             $this->log("Composer command returns $result", \Project::MSG_ERR);
