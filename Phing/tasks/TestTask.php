@@ -194,7 +194,7 @@ class TestTask extends AbstractTask
 
         $coverage = $this->coverageHtmlTarget ? "--coverage-html {$this->coverageHtmlTarget}" : '';
 
-        $result = $this->exec("Phpunit", "php $this->bin -c $this->config $coverage");
+        $result = $this->exec("Phpunit", "php $this->bin -c $this->config $coverage", [], \Project::MSG_INFO, true, false);
 
         if ($this->failbuild && (bool)$result) {
             $this->log("Phpunit returns $result", \Project::MSG_ERR);
@@ -214,7 +214,11 @@ class TestTask extends AbstractTask
 
         $this->exec(
             "PhpCS",
-            "php $this->bin --report=checkstyle --report-file=$this->reportTarget --standard=$this->standard --ignore=$this->excludes ."
+            "php $this->bin --report=checkstyle --report-file=$this->reportTarget --standard=$this->standard --ignore=$this->excludes .",
+            [],
+            \Project::MSG_INFO,
+            true,
+            false
         );
     }
 
@@ -234,7 +238,7 @@ class TestTask extends AbstractTask
             }
         }
 
-        $result = $this->exec("Phploc", "php $this->bin --log-csv $this->reportTarget .", $options);
+        $result = $this->exec("Phploc", "php $this->bin --log-csv $this->reportTarget .", $options, \Project::MSG_INFO, true, false);
 
         if ($this->failbuild && (bool)$result) {
             $this->log("Phploc returns $result", \Project::MSG_ERR);
@@ -259,7 +263,7 @@ class TestTask extends AbstractTask
             $files = $fs->getDirectoryScanner($this->project)->getIncludedFiles();
 
             foreach ($files as $file) {
-                $result = $this->exec('', "php -l $file", array(), \Project::MSG_DEBUG);
+                $result = $this->exec('', "php -l $file", array(), \Project::MSG_DEBUG, true, false);
                 $failbuild |= (bool)$result;
             }
         }
@@ -289,7 +293,7 @@ class TestTask extends AbstractTask
             $files = $fs->getDirectoryScanner($this->project)->getIncludedFiles();
 
             foreach ($files as $file) {
-                $result = $this->exec('', "php $this->bin lint $file", array(), \Project::MSG_DEBUG);
+                $result = $this->exec('', "php $this->bin lint $file", array(), \Project::MSG_DEBUG, true, false);
                 $failbuild |= (bool)$result;
             }
         }
