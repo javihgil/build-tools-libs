@@ -468,7 +468,7 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
 
             case 'release':
                 $this->log("Upload private release $localFile to $remoteFile");
-                $this->getDriver()->uploadRelease($localFile, $remoteFile, $this->file);
+                $this->getDriver()->uploadRelease($localFile, $remoteFile);
 
                 if ($this->sha1) {
                     $this->log("Upload private release sha1 file $localSha1File to $remoteSha1File");

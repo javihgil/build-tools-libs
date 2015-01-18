@@ -68,6 +68,14 @@ class S3Repository implements PackageRepositoryInterface
         $this->buildBucketPath = $this->project->getProperty('s3.build.bucket.path');
         $this->releaseBucketPath = $this->project->getProperty('s3.release.bucket.path');
 
+        if (!$this->buildBucketPath) {
+            throw new \BuildException('s3.build.bucket.path property must not be empty');
+        }
+
+        if (!$this->releaseBucketPath) {
+            throw new \BuildException('s3.release.bucket.path property must not be empty');
+        }
+
         if ($this->project->getProperty('s3.cmd.bin')) {
             $this->s3cmdBin = $this->project->getProperty('s3.cmd.bin');
         }
