@@ -174,6 +174,16 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
     }
 
     /**
+     * @param string $driver
+     * @return $this
+     */
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
+        return $this;
+    }
+
+    /**
      * Main task
      */
     public function main()
