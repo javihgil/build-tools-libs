@@ -151,7 +151,13 @@ class ModuleIteratorTask extends AbstractTask implements ActionTaskInterface
             $this->log('==========================================================================', Project::MSG_INFO);
             $dir = $module->getName();
             $arguments[] = '-DmoduleName=' . $module->getName();
-            $returnValue = $this->exec("Call module task", "cd $dir ; phing $this->task", $arguments);
+            $returnValue = $this->exec(
+                "Call module task", "cd $dir ; phing $this->task",
+                $arguments,
+                \Project::MSG_INFO,
+                true,
+                false
+            );
             $this->log(
                 sprintf(' %s call %s task ends with result: %s', $module->getName(), $this->task, $returnValue),
                 \Project::MSG_INFO
