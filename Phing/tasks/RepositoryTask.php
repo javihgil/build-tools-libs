@@ -314,7 +314,10 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                         continue;
                     }
 
+                    $this->log("Download private build $remoteFile to $localFile");
                     $this->getDriver()->downloadBuild($remoteFile, $localFile);
+
+                    $this->log("Download private build sha1 file $remoteSha1File to $localSha1File");
                     $this->getDriver()->downloadBuild($remoteSha1File, $localSha1File);
                 } else {
                     if (!$this->getDriver()->releaseExists($remoteFile)) {
@@ -322,7 +325,10 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                         continue;
                     }
 
+                    $this->log("Download private release $remoteFile to $localFile");
                     $this->getDriver()->downloadRelease($remoteFile, $localFile);
+
+                    $this->log("Download private release sha1 file $remoteSha1File to $localSha1File");
                     $this->getDriver()->downloadRelease($remoteSha1File, $localSha1File);
                 }
                 $dw_end_time = microtime(true);
@@ -401,15 +407,24 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
         $version = $this->getVersion();
         $format = 'tar.gz';
 
+        $remoteFile = "$name-v$version.$format";
+        $remoteSha1File = "$name-v$version.$format.sha1";
+        $localFile = $this->file;
+        $localSha1File = "{$this->file}.sha1";
+
         if (\Composer\Version::isDev($version)) {
-            $this->getDriver()->downloadBuild("$name-v$version.$format", $this->file);
+            $this->log("Download private build $remoteFile to $localFile");
+            $this->getDriver()->downloadBuild($remoteFile, $localFile);
             if ($this->sha1) {
-                $this->getDriver()->downloadBuild("$name-v$version.$format.sha1", $this->file);
+                $this->log("Download private build sha1 file $remoteSha1File to $localSha1File");
+                $this->getDriver()->downloadBuild($remoteSha1File, $localSha1File);
             }
         } else {
-            $this->getDriver()->downloadRelease("$name-v$version.$format", $this->file);
+            $this->log("Download private release $remoteFile to $localFile");
+            $this->getDriver()->downloadRelease($remoteFile, $localFile);
             if ($this->sha1) {
-                $this->getDriver()->downloadRelease("$name-v$version.$format.sha1", $this->file);
+                $this->log("Download private release sha1 file $remoteSha1File to $localSha1File");
+                $this->getDriver()->downloadRelease($remoteSha1File, $localSha1File);
             }
         }
     }
@@ -435,20 +450,29 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
             throw new \BuildException("File format is not valid ($this->file), allowed values are zip and tar.gz");
         }
 
+        $remoteFile = "$name-v$version.$format";
+        $remoteSha1File = "$name-v$version.$format.sha1";
+        $localFile = $this->file;
+        $localSha1File = "{$this->file}.sha1";
+
         switch ($repo) {
             case 'build':
-                $this->getDriver()->uploadBuild("$name-v$version.$format", $this->file);
+                $this->log("Upload private build $localFile to $remoteFile");
+                $this->getDriver()->uploadBuild($localFile, $remoteFile);
 
                 if ($this->sha1) {
-                    $this->getDriver()->uploadBuild("$name-v$version.$format.sha1", $this->file);
+                    $this->log("Upload private build sha1 file $localSha1File to $remoteSha1File");
+                    $this->getDriver()->uploadBuild($localSha1File, $remoteSha1File);
                 }
                 break;
 
             case 'release':
-                $this->getDriver()->uploadRelease("$name-v$version.$format", $this->file);
+                $this->log("Upload private release $localFile to $remoteFile");
+                $this->getDriver()->uploadRelease($localFile, $remoteFile, $this->file);
 
                 if ($this->sha1) {
-                    $this->getDriver()->uploadRelease("$name-v$version.$format.sha1", $this->file);
+                    $this->log("Upload private release sha1 file $localSha1File to $remoteSha1File");
+                    $this->getDriver()->uploadRelease($localSha1File, $remoteSha1File);
                 }
                 break;
         }
