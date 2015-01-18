@@ -15,3 +15,5 @@ require_once "Composer/Version.php";
 require_once "Console/Command.php";
 require_once "Task/AbstractTask.php";
 require_once "Task/ActionTaskInterface.php";
+require_once "Repository/PackageRepositoryInterface.php";
+require_once "Repository/S3Repository.php";
