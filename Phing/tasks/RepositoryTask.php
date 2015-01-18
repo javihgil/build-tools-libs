@@ -259,7 +259,7 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
 
         $this->log("Look for private dependencies in $this->jsonFile...", Project::MSG_INFO);
 
-        $composerJson = new ComposerJson($this->jsonFile);
+        $composerJson = ComposerJson::createFromFile($this->jsonFile);
 
         if (false !== $this->downloadJsonRequirements($composerJson)) {
             $composerJson->addRepository($this->localRepositoryDir);
@@ -328,7 +328,7 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                 $dw_end_time = microtime(true);
                 $dw_time_elapsed = round($dw_end_time - $dw_start_time, 3);
 
-                $zipComposerJson = \Composer\Zip::readComposerJsonFromZip("$this->localRepositoryDir/$packageZipName");
+                $zipComposerJson = ComposerJson::createFromZip("$this->localRepositoryDir/$packageZipName");
                 $this->downloadJsonRequirements($zipComposerJson);
             }
         }
@@ -344,7 +344,7 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
         $this->log("Checking private packages versions...", \Project::MSG_INFO);
 
         if (file_exists($this->lockFile)) {
-            $composerLock = new ComposerLock($this->lockFile);
+            $composerLock = ComposerLock::createFromFile($this->lockFile);
 
             foreach ($composerLock->getAllPackages() as $package) {
                 if (!$package->getDistUrl()) {
@@ -423,7 +423,7 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
         $this->requireParam('jsonFile');
         $this->requireParam('file');
 
-        $composerJson = new ComposerJson($this->jsonFile);
+        $composerJson = ComposerJson::createFromFile($this->jsonFile);
         $name = $composerJson->getName();
         $version = $composerJson->getVersion();
 
