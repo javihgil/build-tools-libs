@@ -605,7 +605,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
             $this->preferDist ? '--prefer-dist' : '',
             $this->noProgress ? '--no-progress' : '',
             $this->profile ? '--profile' : '',
-            $this->verbosity ? "--$this->verbosity" : '',
+            $this->verbosity ? "-$this->verbosity" : '',
         );
 
         if ($this->optimizeautoloader) {
