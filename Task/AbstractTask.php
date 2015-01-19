@@ -39,8 +39,8 @@ abstract class AbstractTask extends \Task
      */
     protected function testIf()
     {
-        if ($this->if === null) {
-            return false;
+        if (empty($this->if)) {
+            return true;
         }
 
         return (bool)$this->project->getProperty($this->if);
