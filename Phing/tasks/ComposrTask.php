@@ -130,6 +130,11 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     protected $verbosity = 'vv';
 
     /**
+     * @var string
+     */
+    protected $logFile;
+
+    /**
      * @param string $localRepositoryDir
      */
     public function setLocalRepositoryDir($localRepositoryDir)
@@ -474,6 +479,16 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     }
 
     /**
+     * @param string $logFile
+     * @return $this
+     */
+    public function setLogFile($logFile)
+    {
+        $this->logFile = $logFile;
+        return $this;
+    }
+
+    /**
      * @throws BuildException
      */
     public function main()
@@ -519,6 +534,10 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
                 $this->export();
                 break;
 
+            case 'log-installed':
+                $this->logInstalled();
+                break;
+
             default:
                 throw new \BuildException("$this->action action is not valid");
         }
@@ -541,6 +560,27 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         system("php -r \"eval('?>'.file_get_contents('https://getcomposer.org/installer'));\"");
         $baseDir = $this->project->getBasedir();
         $this->log("composer.phar installed in $baseDir", \Project::MSG_INFO);
+    }
+
+    /**
+     * Show installed packages
+     */
+    public function logInstalled()
+    {
+        $this->requireParam('pharFile');
+        $this->requireParam('logFile');
+        $options = array(
+            "--installed",
+        );
+
+        $result = $this->exec(
+            "Composer show",
+            "php -d memory_limit=-1 $this->pharFile show >> $this->logFile",
+            $options,
+            \Project::MSG_INFO,
+            true,
+            false // no buffer
+        );
     }
 
     /**
