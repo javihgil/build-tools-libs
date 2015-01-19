@@ -570,6 +570,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         $this->requireParam('pharFile');
         $this->requireParam('logFile');
         $options = array(
+            "-d $this->dir",
             "--installed",
         );
 
