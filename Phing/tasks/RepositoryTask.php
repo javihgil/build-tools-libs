@@ -231,6 +231,10 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                 $className = '\Repository\S3Repository';
                 break;
 
+            case 'local':
+                $className = '\Repository\LocalRepository';
+                break;
+
             default:
                 $className = $this->driver;
         }
