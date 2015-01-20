@@ -122,6 +122,11 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     /**
      * @var bool
      */
+    protected $noInteraction = true;
+
+    /**
+     * @var bool
+     */
     protected $profile = true;
 
     /**
@@ -489,6 +494,18 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     }
 
     /**
+     * @param boolean $noInteraction <param_description>
+     *
+     * @return $this
+     */
+    public function setNoInteraction($noInteraction)
+    {
+        $this->noInteraction = $noInteraction;
+
+        return $this;
+    }
+
+    /**
      * @throws BuildException
      */
     public function main()
@@ -645,6 +662,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
             $this->dev ? '--dev' : '--no-dev',
             $this->preferDist ? '--prefer-dist' : '',
             $this->noProgress ? '--no-progress' : '',
+            $this->noInteraction ? '--no-interaction' : '',
             $this->profile ? '--profile' : '',
             $this->verbosity ? "-$this->verbosity" : '',
         );
