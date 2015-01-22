@@ -300,7 +300,7 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             $this->warmup ? '' : '--no-warmup',
         );
 
-        $this->exec('Symfony cache clear', "cd $this->dir ; $this->console cache:clear", $options);
+        $this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:clear", $options);
     }
 
     /**
@@ -318,7 +318,7 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony cache clear', "cd $this->dir ; $this->console cache:warm", $options);
+        $this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:warm", $options);
     }
 
     /**
@@ -340,7 +340,7 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony assets install', "cd $this->dir ; $this->console assets:install", $options);
+        $this->exec('Symfony assets install', "cd $this->dir ; php $this->console assets:install", $options);
     }
 
     /**
@@ -356,7 +356,7 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony assetic dump', "cd $this->dir ; $this->console assetic:dump", $options);
+        $this->exec('Symfony assetic dump', "cd $this->dir ; php $this->console assetic:dump", $options);
     }
 
     /**
@@ -374,7 +374,7 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
 
         $this->exec(
             'Symfony doctrine schema create',
-            "cd $this->dir ; $this->console doctrine:schema:create",
+            "cd $this->dir ; php $this->console doctrine:schema:create",
             $options
         );
     }
@@ -394,12 +394,12 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
 
         $this->exec(
             'Symfony doctrine schema update query dump',
-            "cd $this->dir ; $this->console doctrine:schema:update --dump-sql",
+            "cd $this->dir ; php $this->console doctrine:schema:update --dump-sql",
             $options
         );
         $this->exec(
             'Symfony doctrine schema update query exec',
-            "$this->console doctrine:schema:update --force",
+            "php $this->console doctrine:schema:update --force",
             $options
         );
     }
