@@ -50,4 +50,14 @@ class Package
         $data = self::explodePackageName($packageName);
         return $data[1];
     }
+
+
+    public static function getVersionFromFilename($package)
+    {
+        if (preg_match('/v([0-9]+.[0-9]+.[0-9]+(\-dev)?)/', $package, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
 }

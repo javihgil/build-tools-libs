@@ -96,6 +96,41 @@ class S3Repository implements PackageRepositoryInterface
     }
 
     /**
+     * @param string $bucket
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    protected function getPackageBucketList($bucket, $path, $name = '')
+    {
+        list($returnedString, $result) = Command::exec(
+            "s3cmd ls s3://$bucket/$path/"
+        );
+
+        $lines = explode("\n", $returnedString);
+
+        $packages = [];
+
+        foreach ($lines as $line) {
+            if (!trim($line) || preg_match('/\.sha1$/i', $line)) {
+                continue;
+            }
+
+            $url = substr($line, 29) ."\n";
+            $package = substr($url, strlen("s3://$bucket/$path/"));
+
+            if ($name && !preg_match("/^$name/i", $package)) {
+                continue;
+            }
+
+            $packages[] = $package;
+        }
+
+        return $packages;
+    }
+
+
+    /**
      * @param string $remoteFile
      * @return bool
      */
@@ -135,6 +170,16 @@ class S3Repository implements PackageRepositoryInterface
     }
 
     /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageBuildList($path, $name = '')
+    {
+        return $this->getPackageBucketList($this->buildBucketPath, $path, $name);
+    }
+
+    /**
      * @param string $remoteFile
      * @return bool
      */
@@ -171,5 +216,15 @@ class S3Repository implements PackageRepositoryInterface
         );
 
         return (bool)$returnedString;
+    }
+
+    /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageReleaseList($path, $name = '')
+    {
+        return $this->getPackageBucketList($this->releaseBucketPath, $path, $name);
     }
 }

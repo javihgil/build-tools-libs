@@ -46,6 +46,13 @@ interface PackageRepositoryInterface
     public function uploadBuild($sourceFile, $remoteFile);
 
     /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageBuildList($path, $name = '');
+
+    /**
      * @param string $remoteFile
      * @return bool
      */
@@ -64,4 +71,11 @@ interface PackageRepositoryInterface
      * @return bool
      */
     public function uploadRelease($sourceFile, $remoteFile);
+
+    /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageReleaseList($path, $name = '');
 }

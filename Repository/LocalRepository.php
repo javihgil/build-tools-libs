@@ -94,6 +94,16 @@ class LocalRepository implements PackageRepositoryInterface
     }
 
     /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageBuildList($path, $name = '')
+    {
+        throw new \Exception("getPackageReleaseList not yet implemented in LocalRepository");
+    }
+
+    /**
      * @param string $remoteFile
      * @return bool
      */
@@ -120,5 +130,15 @@ class LocalRepository implements PackageRepositoryInterface
     public function uploadRelease($sourceFile, $remoteFile)
     {
         return copy($sourceFile, "$this->releaseLocalPath/$remoteFile");
+    }
+
+    /**
+     * @param string $path
+     * @param string $name
+     * @return array
+     */
+    public function getPackageReleaseList($path, $name = '')
+    {
+        throw new \Exception("getPackageReleaseList not yet implemented in LocalRepository");
     }
 }

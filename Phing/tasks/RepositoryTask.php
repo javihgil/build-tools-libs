@@ -272,6 +272,61 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
     }
 
     /**
+     * @param string $package
+     * @param string $packageGroup
+     * @param string $name
+     * @param string $version
+     * @throws BuildException
+     */
+    protected function downloadFile($package, $packageGroup, $name, $version)
+    {
+        if (isset($this->loadedRequirements["$package-$version"])) {
+            $this->log("Skip already processed dependency $package ($version)", Project::MSG_INFO);
+            return;
+        } else {
+            $this->loadedRequirements["$package-$version"] = true;
+        }
+
+        $packageZipName = "$name-v$version.zip";
+
+        $remoteFile = "$packageGroup/$packageZipName";
+        $remoteSha1File = "$packageGroup/$packageZipName.sha1";
+        $localFile = "$this->localRepositoryDir/$packageZipName";
+        $localSha1File = "$this->localRepositoryDir/$packageZipName.sha1";
+
+        $dw_start_time = microtime(true);
+        if (\Composer\Version::isDev($version)) {
+            if (!$this->getDriver()->buildExists($remoteFile)) {
+                $this->log("Package not found in private repository", \Project::MSG_WARN);
+                return;
+            }
+
+            $this->log("Download private build $remoteFile to $localFile");
+            $this->getDriver()->downloadBuild($remoteFile, $localFile);
+
+            $this->log("Download private build sha1 file $remoteSha1File to $localSha1File");
+            $this->getDriver()->downloadBuild($remoteSha1File, $localSha1File);
+        } else {
+            if (!$this->getDriver()->releaseExists($remoteFile)) {
+                $this->log("Package not found in private repository", \Project::MSG_WARN);
+                return;
+            }
+
+            $this->log("Download private release $remoteFile to $localFile");
+            $this->getDriver()->downloadRelease($remoteFile, $localFile);
+
+            $this->log("Download private release sha1 file $remoteSha1File to $localSha1File");
+            $this->getDriver()->downloadRelease($remoteSha1File, $localSha1File);
+        }
+        $dw_end_time = microtime(true);
+        $dw_time_elapsed = round($dw_end_time - $dw_start_time, 3);
+
+        $zipComposerJson = ComposerJson::createFromZip("$this->localRepositoryDir/$packageZipName");
+        $this->downloadJsonRequirements($zipComposerJson);
+    }
+
+
+    /**
      * @param ComposerJson $composerJson
      * @return bool
      * @throws BuildException
@@ -291,55 +346,55 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                     $version = $composerJson->getVersion();
                 }
 
-                if (preg_match('/^~.*/', $version)) {
-                    throw new \BuildException("Look for ~ version feature not yet implemented");
-                }
-
-                if (isset($this->loadedRequirements["$package-$version"])) {
-                    $this->log("Skip already processed dependency $package ($version)", Project::MSG_INFO);
-                    continue;
-                } else {
-                    $this->loadedRequirements["$package-$version"] = true;
-                }
-
                 $packageGroup = \Composer\Package::group($package);
                 $name = \Composer\Package::name($package);
-                $packageZipName = "$name-v$version.zip";
 
-                $remoteFile = "$packageGroup/$packageZipName";
-                $remoteSha1File = "$packageGroup/$packageZipName.sha1";
-                $localFile = "$this->localRepositoryDir/$packageZipName";
-                $localSha1File = "$this->localRepositoryDir/$packageZipName.sha1";
+                if (preg_match('/^~[0-9]+\.[0-9]+/', $version)) {
+                    $this->log("Download all $package '$version' matching packages", Project::MSG_INFO);
 
-                $dw_start_time = microtime(true);
-                if (\Composer\Version::isDev($version)) {
-                    if (!$this->getDriver()->buildExists($remoteFile)) {
-                        $this->log("Package not found in private repository", \Project::MSG_WARN);
-                        continue;
+                    $versionParts = explode('.', str_replace('~', '', $version));
+
+                    // download all build files matching
+                    $buildsList = $this->getDriver()->getPackageBuildList($packageGroup, $name);
+                    foreach ($buildsList as $buildFile) {
+                        $fileVersion = \Composer\Package::getVersionFromFilename($buildFile);
+
+                        if (!version_compare("{$versionParts[0]}.{$versionParts[1]}", $fileVersion, 'le')) {
+                            // echo "not download $fileVersion\n";
+                            continue;
+                        }
+
+                        $nextVersion = $versionParts[0]+1;
+                        if (!version_compare("{$nextVersion}.0", $fileVersion, 'gt')) {
+                            // echo "not download $fileVersion\n";
+                            continue;
+                        }
+
+                        $this->downloadFile($package, $packageGroup, $name, $fileVersion);
                     }
 
-                    $this->log("Download private build $remoteFile to $localFile");
-                    $this->getDriver()->downloadBuild($remoteFile, $localFile);
+                    $releasesList = $this->getDriver()->getPackageReleaseList($packageGroup, $name);
+                    foreach ($releasesList as $releaseFile) {
+                        $fileVersion = \Composer\Package::getVersionFromFilename($releaseFile);
 
-                    $this->log("Download private build sha1 file $remoteSha1File to $localSha1File");
-                    $this->getDriver()->downloadBuild($remoteSha1File, $localSha1File);
+                        if (!version_compare("{$versionParts[0]}.{$versionParts[1]}", $fileVersion, 'le')) {
+                            // echo "not download $fileVersion\n";
+                            continue;
+                        }
+
+                        $nextVersion = $versionParts[0]+1;
+                        if (!version_compare("{$nextVersion}.0", $fileVersion, 'gt')) {
+                            // echo "not download $fileVersion\n";
+                            continue;
+                        }
+
+                        $this->downloadFile($package, $packageGroup, $name, $fileVersion);
+                    }
+
                 } else {
-                    if (!$this->getDriver()->releaseExists($remoteFile)) {
-                        $this->log("Package not found in private repository", \Project::MSG_WARN);
-                        continue;
-                    }
-
-                    $this->log("Download private release $remoteFile to $localFile");
-                    $this->getDriver()->downloadRelease($remoteFile, $localFile);
-
-                    $this->log("Download private release sha1 file $remoteSha1File to $localSha1File");
-                    $this->getDriver()->downloadRelease($remoteSha1File, $localSha1File);
+                    // download normal version
+                    $this->downloadFile($package, $packageGroup, $name, $version);
                 }
-                $dw_end_time = microtime(true);
-                $dw_time_elapsed = round($dw_end_time - $dw_start_time, 3);
-
-                $zipComposerJson = ComposerJson::createFromZip("$this->localRepositoryDir/$packageZipName");
-                $this->downloadJsonRequirements($zipComposerJson);
             }
         }
 
