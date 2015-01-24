@@ -67,6 +67,11 @@ class TestTask extends AbstractTask
     /**
      * @var string
      */
+    protected $coverageCloverTarget;
+
+    /**
+     * @var string
+     */
     protected $reportTarget;
 
     /**
@@ -112,6 +117,14 @@ class TestTask extends AbstractTask
     public function setCoverageHtmlTarget($target)
     {
         $this->coverageHtmlTarget = $target;
+    }
+
+    /**
+     * @param string $coverageCloverTarget
+     */
+    public function setCoverageCloverTarget($coverageCloverTarget)
+    {
+        $this->coverageCloverTarget = $coverageCloverTarget;
     }
 
     /**
@@ -192,7 +205,7 @@ class TestTask extends AbstractTask
         $this->requireParam('bin');
         $this->requireParam('config');
 
-        $coverage = $this->coverageHtmlTarget ? "--coverage-html {$this->coverageHtmlTarget}" : '';
+        $coverage = $this->coverageHtmlTarget ? "--coverage-html {$this->coverageHtmlTarget} --coverage-clover {$this->coverageCloverTarget}" : '';
 
         $result = $this->exec("Phpunit", "php $this->bin -c $this->config $coverage", [], \Project::MSG_INFO, true, false);
 
