@@ -77,11 +77,6 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     /**
      * @var bool
      */
-    protected $release = false;
-
-    /**
-     * @var bool
-     */
     protected $increment = false;
 
     /**
@@ -281,22 +276,6 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     public function getIncrement()
     {
         return $this->increment;
-    }
-
-    /**
-     * @param boolean $release
-     */
-    public function setRelease($release)
-    {
-        $this->release = $release;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getRelease()
-    {
-        return $this->release;
     }
 
     /**
@@ -696,7 +675,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
 
         $composerJson = ComposerJson::createFromFile($this->jsonFile);
 
-        if ($this->release) {
+        if ($this->forceVersionType == 'release') {
             $version = str_ireplace('-dev', '', $composerJson->getVersion());
         } else {
             $version = $composerJson->getVersion();
