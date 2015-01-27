@@ -565,14 +565,20 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     {
         $this->requireParam('pharFile');
         $this->requireParam('logFile');
+        $this->requireParam('jsonFile');
         $options = array(
             "-d $this->dir",
             "--installed",
         );
 
+        $composerJson = ComposerJson::createFromFile($this->jsonFile);
+
+        $packageName = "{$composerJson->getName()} {$composerJson->getVersion()}";
+        $pad = str_pad('', strlen($packageName), '=');
+
         $result = $this->exec(
             "Composer show",
-            "php -d memory_limit=-1 $this->pharFile show >> $this->logFile",
+            "echo '$packageName\n$pad' >> $this->logFile ; php -d memory_limit=-1 $this->pharFile show >> $this->logFile",
             $options,
             \Project::MSG_INFO,
             true,
@@ -587,7 +593,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     public function pharSelfUpdate()
     {
         $this->requireParam('pharFile');
-        $this->exec("Composer self update", "php $this->pharFile self-update");
+        $this->exec("Composer self update", "php $this->pharFile self-update --no-progress");
     }
 
     /**
