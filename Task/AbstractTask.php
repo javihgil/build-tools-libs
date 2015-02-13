@@ -47,6 +47,31 @@ abstract class AbstractTask extends \Task
     }
 
     /**
+     * @var string
+     */
+    protected $unless;
+
+    /**
+     * @param string $unless
+     */
+    public function setUnless($unless)
+    {
+        $this->unless = $unless;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function testUnless()
+    {
+        if (empty($this->unless)) {
+            return true;
+        }
+
+        return !(bool)$this->project->getProperty($this->unless);
+    }
+
+    /**
      * @param $message
      * @param $command
      * @param array $options
