@@ -12,6 +12,8 @@
 namespace Task;
 
 use Console\Command;
+use Task\Traits\IfTask;
+use Task\Traits\UnlessTask;
 
 /**
  * Class AbstractTask
@@ -21,55 +23,8 @@ use Console\Command;
  */
 abstract class AbstractTask extends \Task
 {
-    /**
-     * @var string
-     */
-    protected $if;
-
-    /**
-     * @param string $if
-     */
-    public function setIf($if)
-    {
-        $this->if = $if;
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function testIf()
-    {
-        if (empty($this->if)) {
-            return true;
-        }
-
-        return (bool)$this->project->getProperty($this->if);
-    }
-
-    /**
-     * @var string
-     */
-    protected $unless;
-
-    /**
-     * @param string $unless
-     */
-    public function setUnless($unless)
-    {
-        $this->unless = $unless;
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function testUnless()
-    {
-        if (empty($this->unless)) {
-            return true;
-        }
-
-        return !(bool)$this->project->getProperty($this->unless);
-    }
+    use IfTask;
+    use UnlessTask;
 
     /**
      * @param $message

@@ -13,6 +13,8 @@ require_once "Composer/ComposerLock.php";
 require_once "Composer/Package.php";
 require_once "Composer/Version.php";
 require_once "Console/Command.php";
+require_once "Task/Traits/IfTask.php";
+require_once "Task/Traits/UnlessTask.php";
 require_once "Task/AbstractTask.php";
 require_once "Task/ActionTaskInterface.php";
 require_once "Repository/PackageRepositoryInterface.php";

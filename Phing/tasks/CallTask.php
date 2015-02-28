@@ -20,6 +20,8 @@ require_once "lib/autoload.php";
  */
 class CallTask extends \PhingCallTask
 {
+    use \Task\Traits\IfTask;
+    use \Task\Traits\UnlessTask;
 
     /**
      * @var bool
@@ -170,6 +172,10 @@ class CallTask extends \PhingCallTask
      */
     public function main()
     {
+        if (!$this->testIf() || !$this->testUnless()) {
+            return;
+        }
+
         if (!$this->targetIsDefined()) {
             if ($this->required) {
                 throw new \BuildException("$this->subTarget target is required and it's not defined");
