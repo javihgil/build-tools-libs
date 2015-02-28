@@ -61,18 +61,22 @@ abstract class AbstractTask extends \Task
 
     /**
      * @param array $sshOptions
+     * @param bool  $scpCommand
      * @return string
      * @throws \BuildException
      */
-    protected function sshOptions(array $sshOptions)
+    protected function sshOptions(array $sshOptions, $scpCommand = false)
     {
         if (empty($sshOptions['host'])) {
             throw new \BuildException('SSH host option is required');
         }
 
         $sshParameters = "-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet";
-        if (isset($sshOptions['port'])) {
+        if (isset($sshOptions['port']) && !$scpCommand) {
             $sshParameters .= " -p{$sshOptions['port']}";
+        }
+        if (isset($sshOptions['port']) && $scpCommand) {
+            $sshParameters .= " -P {$sshOptions['port']}";
         }
         if (isset($sshOptions['privateKey'])) {
             $sshParameters .= " -i {$sshOptions['privateKey']}";
