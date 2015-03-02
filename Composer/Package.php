@@ -26,7 +26,7 @@ class Package
      */
     public static function explodePackageName($packageName)
     {
-        return explode('/', $packageName);
+        return explode('/', $packageName, 2);
     }
 
     /**
