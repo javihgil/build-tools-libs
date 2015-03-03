@@ -644,7 +644,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         $this->requireParam('pharFile');
         $options = array(
             "-d $this->dir",
-            $this->dev ? '--dev' : '--no-dev',
+            $this->dev ? '' : '--no-dev',
             $this->preferDist ? '--prefer-dist' : '',
             $this->noProgress ? '--no-progress' : '',
             $this->noInteraction ? '--no-interaction' : '',
