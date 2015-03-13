@@ -300,7 +300,9 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             $this->warmup ? '' : '--no-warmup',
         );
 
-        $this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:clear", $options);
+        if ($this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:clear", $options)) {
+            throw new BuildException("Symfony cache:clear command has failed");
+        }
     }
 
     /**
@@ -318,7 +320,9 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:warm", $options);
+        if ($this->exec('Symfony cache clear', "cd $this->dir ; php $this->console cache:warm", $options)) {
+            throw new BuildException("Symfony cache:warm command has failed");
+        }
     }
 
     /**
@@ -340,7 +344,9 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony assets install', "cd $this->dir ; php $this->console assets:install", $options);
+        if ($this->exec('Symfony assets install', "cd $this->dir ; php $this->console assets:install", $options)) {
+            throw new BuildException("Symfony assets:install command has failed");
+        }
     }
 
     /**
@@ -356,7 +362,9 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec('Symfony assetic dump', "cd $this->dir ; php $this->console assetic:dump", $options);
+        if ($this->exec('Symfony assetic dump', "cd $this->dir ; php $this->console assetic:dump", $options)) {
+            throw new BuildException("Symfony assetic:dump command has failed");
+        }
     }
 
     /**
@@ -372,11 +380,9 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec(
-            'Symfony doctrine schema create',
-            "cd $this->dir ; php $this->console doctrine:schema:create",
-            $options
-        );
+        if ($this->exec('Symfony doctrine schema create', "cd $this->dir ; php $this->console doctrine:schema:create", $options)) {
+            throw new BuildException("Symfony doctrine:schema:create command has failed");
+        }
     }
 
     /**
@@ -392,15 +398,12 @@ class SymfonyTask extends AbstractTask implements ActionTaskInterface
             "--env=$this->env",
         );
 
-        $this->exec(
-            'Symfony doctrine schema update query dump',
-            "cd $this->dir ; php $this->console doctrine:schema:update --dump-sql",
-            $options
-        );
-        $this->exec(
-            'Symfony doctrine schema update query exec',
-            "php $this->console doctrine:schema:update --force",
-            $options
-        );
+        if ($this->exec('Symfony doctrine schema update query dump', "cd $this->dir ; php $this->console doctrine:schema:update --dump-sql", $options)) {
+            throw new BuildException("Symfony doctrine:schema:update command has failed");
+        }
+
+        if ($this->exec('Symfony doctrine schema update query exec', "cd $this->dir ; php $this->console doctrine:schema:update --force", $options)) {
+            throw new BuildException("Symfony doctrine:schema:update command has failed");
+        }
     }
 }
