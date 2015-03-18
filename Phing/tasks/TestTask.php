@@ -72,6 +72,11 @@ class TestTask extends AbstractTask
     /**
      * @var string
      */
+    protected $jUnitTarget;
+
+    /**
+     * @var string
+     */
     protected $reportTarget;
 
     /**
@@ -125,6 +130,18 @@ class TestTask extends AbstractTask
     public function setCoverageCloverTarget($coverageCloverTarget)
     {
         $this->coverageCloverTarget = $coverageCloverTarget;
+    }
+
+    /**
+     * @param string $jUnitTarget
+     *
+     * @return $this
+     */
+    public function setJUnitTarget($jUnitTarget)
+    {
+        $this->jUnitTarget = $jUnitTarget;
+
+        return $this;
     }
 
     /**
@@ -205,11 +222,23 @@ class TestTask extends AbstractTask
         $this->requireParam('bin');
         $this->requireParam('config');
 
-        $coverage = $this->coverageHtmlTarget ? "--coverage-html {$this->coverageHtmlTarget} --coverage-clover {$this->coverageCloverTarget}" : '';
+        $options = [];
 
-        $result = $this->exec("Phpunit", "php $this->bin -c $this->config $coverage", [], \Project::MSG_INFO, true, false);
+        if ($this->coverageHtmlTarget) {
+            $options[] = "--coverage-html {$this->coverageHtmlTarget}";
+        }
 
-        if ($this->failbuild && (bool)$result) {
+        if ($this->coverageCloverTarget) {
+            $options[] = "--coverage-clover {$this->coverageCloverTarget}";
+        }
+
+        if ($this->jUnitTarget) {
+            $options[] = "--log-junit {$this->jUnitTarget}";
+        }
+
+        $result = $this->exec("Phpunit", "php $this->bin -c $this->config", $options, \Project::MSG_INFO, true, false);
+
+        if ($this->failbuild && (bool) $result) {
             $this->log("Phpunit returns $result", \Project::MSG_ERR);
             throw new \BuildException("Phpunit tests failed");
         }
