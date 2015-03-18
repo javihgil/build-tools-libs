@@ -139,12 +139,12 @@ class ModuleIteratorTask extends AbstractTask implements ActionTaskInterface
         $this->requireParam('modulesrefid');
         $this->requireParam('task');
 
-        $arguments = $this->commandline->getArguments();
-
         $modules = $this->project->getReference($this->modulesrefid);
 
         /** @var Module $module */
         foreach ($modules->getModules() as $module) {
+            $arguments = $this->commandline->getArguments();
+
             $startTime = microtime(true);
             $this->log('==========================================================================', Project::MSG_INFO);
             $this->log(' ' . $module->getName(), \Project::MSG_INFO);
