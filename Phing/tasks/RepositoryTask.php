@@ -301,22 +301,45 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                 return;
             }
 
-            $this->log("Download private build $remoteFile to $localFile");
-            $this->getDriver()->downloadBuild($remoteFile, $localFile);
+            // read existing sha1 code
+            if (file_exists($localSha1File) && file_exists($localFile)) {
+                $existingSha1 = file_get_contents($localSha1File);
+            } else {
+                $existingSha1 = null;
+            }
 
             $this->log("Download private build sha1 file $remoteSha1File to $localSha1File");
             $this->getDriver()->downloadBuild($remoteSha1File, $localSha1File);
+
+            if ($existingSha1 && $existingSha1==file_get_contents($localSha1File)) {
+                $this->log("Skip already downloaded private build $remoteFile to $localFile");
+            } else {
+                $this->log("Download private build $remoteFile to $localFile");
+                $this->getDriver()->downloadBuild($remoteFile, $localFile);
+            }
         } else {
             if (!$this->getDriver()->releaseExists($remoteFile)) {
                 $this->log("Package not found in private repository", \Project::MSG_WARN);
                 return;
             }
 
-            $this->log("Download private release $remoteFile to $localFile");
-            $this->getDriver()->downloadRelease($remoteFile, $localFile);
+            // read existing sha1 code
+            if (file_exists($localSha1File) && file_exists($localFile)) {
+                $existingSha1 = file_get_contents($localSha1File);
+            } else {
+                $existingSha1 = null;
+            }
 
             $this->log("Download private release sha1 file $remoteSha1File to $localSha1File");
             $this->getDriver()->downloadRelease($remoteSha1File, $localSha1File);
+
+
+            if ($existingSha1 && $existingSha1==file_get_contents($localSha1File)) {
+                $this->log("Skip already downloaded private release $remoteFile to $localFile");
+            } else {
+                $this->log("Download private release $remoteFile to $localFile");
+                $this->getDriver()->downloadRelease($remoteFile, $localFile);
+            }
         }
         $dw_end_time = microtime(true);
         $dw_time_elapsed = round($dw_end_time - $dw_start_time, 3);
