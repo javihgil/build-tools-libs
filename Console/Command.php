@@ -14,14 +14,14 @@ namespace Console;
 /**
  * Class Command
  *
- * @package  Console
- * @author   Javi H. Gil <https://github.com/javihgil>
+ * @package Console
  */
 class Command
 {
     /**
      * @param string $execCommand
      * @param bool   $bufferResponse
+     *
      * @return array [returnedString, result]
      */
     public static function exec($execCommand, $bufferResponse = true)
@@ -30,7 +30,7 @@ class Command
             ob_start();
         }
 
-        $lastLine = system($execCommand, $result);
+        $returnedString = system($execCommand, $result);
 
         if ($bufferResponse) {
             $returnedString = ob_get_clean();

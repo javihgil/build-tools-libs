@@ -4,7 +4,8 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Composer\\": "Composer"
+            "Composer\\": "Composer",
+            "Console\\": "Console"
         }
     },
     "require-dev": {
