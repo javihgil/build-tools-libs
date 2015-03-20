@@ -12,11 +12,9 @@
 namespace Composer;
 
 /**
- * Class Json
+ * Class ComposerJson
  *
  * @package Composer
- *
- * @author  Javi H. Gil <https://github.com/javihgil>
  */
 class ComposerJson
 {
@@ -27,24 +25,26 @@ class ComposerJson
     protected $jsonArray;
 
     /**
-     * @param $jsonString
+     * @param string $jsonString
+     *
      * @throws \BuildException
      */
     public function __construct($jsonString)
     {
-        $json_decoded = json_decode($jsonString, true);
+        $jsonDecoded = json_decode($jsonString, true);
 
-        if (!$json_decoded) {
+        if (!$jsonDecoded) {
             throw new \BuildException('Can not decode json string');
         }
 
-        $this->jsonArray = $json_decoded;
+        $this->jsonArray = $jsonDecoded;
     }
 
     /**
      * Saves data into composer.json file
      *
      * @param string $filePath
+     *
      * @throws \BuildException
      */
     public function save($filePath)
@@ -111,7 +111,7 @@ class ComposerJson
     }
 
     /**
-     * @param $filterExprReg
+     * @param string $filterExprReg
      *
      * @return array
      */
@@ -159,7 +159,7 @@ class ComposerJson
      */
     public function getName()
     {
-        return $this->jsonArray['name'];
+        return isset($this->jsonArray['name']) ? $this->jsonArray['name'] : '';
     }
 
     /**
@@ -167,7 +167,7 @@ class ComposerJson
      */
     public function getVersion()
     {
-        return $this->jsonArray['version'];
+        return isset($this->jsonArray['version']) ? $this->jsonArray['version'] : '';
     }
 
     /**
@@ -175,7 +175,7 @@ class ComposerJson
      */
     public function getType()
     {
-        return $this->jsonArray['type'];
+        return isset($this->jsonArray['type']) ? $this->jsonArray['type'] : '';
     }
 
     /**
@@ -191,7 +191,7 @@ class ComposerJson
      */
     public function getDistType()
     {
-        return $this->jsonArray['dist']['type'];
+        return isset($this->jsonArray['dist']['type']) ? $this->jsonArray['dist']['type'] : '';
     }
 
     /**
@@ -199,7 +199,7 @@ class ComposerJson
      */
     public function getDistUrl()
     {
-        return $this->jsonArray['dist']['url'];
+        return isset($this->jsonArray['dist']['url']) ? $this->jsonArray['dist']['url'] : '';
     }
 
     /**
@@ -207,7 +207,7 @@ class ComposerJson
      */
     public function getDistShasum()
     {
-        return $this->jsonArray['dist']['shasum'];
+        return isset($this->jsonArray['dist']['shasum']) ? $this->jsonArray['dist']['url'] : '';
     }
 
     /**
@@ -245,8 +245,8 @@ class ComposerJson
     }
 
     /**
-     * @param $dependency
-     * @param $version
+     * @param string $dependency
+     * @param string $version
      */
     public function setDependencyVersion($dependency, $version)
     {
@@ -276,24 +276,25 @@ class ComposerJson
     }
 
     /**
-     * @param $zipPath
+     * @param string $zipPath
      *
      * @return ComposerJson
      * @throws \BuildException
      */
     public static function createFromZip($zipPath)
     {
-        $composer_json = file_get_contents("zip://$zipPath#composer.json");
+        $composerJson = file_get_contents("zip://$zipPath#composer.json");
 
-        if (false === $composer_json) {
+        if (false === $composerJson) {
             throw new \BuildException(sprintf('Composer json file not found inside zip file "%s"', $zipPath));
         }
 
-        return new ComposerJson($composer_json);
+        return new ComposerJson($composerJson);
     }
 
     /**
      * @param string $filePath
+     *
      * @return ComposerJson
      * @throws \BuildException
      */
@@ -303,8 +304,8 @@ class ComposerJson
             throw new \BuildException(sprintf('Composer json file not found at "%s"', $filePath));
         }
 
-        $composer_json = file_get_contents($filePath);
+        $composerJson = file_get_contents($filePath);
 
-        return new ComposerJson($composer_json);
+        return new ComposerJson($composerJson);
     }
 }

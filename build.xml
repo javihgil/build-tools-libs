@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="build-tools-libs" default="test">
+    <target name="clean">
+        <exec command="rm composer.phar" passthru="true" />
+        <exec command="rm composer.lock" passthru="true" />
+        <exec command="rm vendor -Rf" passthru="true" />
+        <exec command="rm target -Rf" passthru="true" />
+    </target>
+
+    <target name="prepare" depends="clean">
+        <exec command="curl -sS https://getcomposer.org/installer | php" passthru="true" checkreturn="true" />
+        <exec command="php composer.phar install" passthru="true" checkreturn="true" />
+        <exec command="mkdir -p target/reports" passthru="true" checkreturn="true"/>
+    </target>
+
+    <target name="test" depends="prepare">
+        <exec command="php vendor/bin/phpunit --log-junit target/reports/junit.xml --coverage-clover target/reports/coverage.xml --coverage-html target/reports/coverage" passthru="true" checkreturn="true"/>
+    </target>
+
+    <target name="test-only">
+        <exec command="php vendor/bin/phpunit" passthru="true" checkreturn="true"/>
+    </target>
+
+    <target name="test-reports-only">
+        <exec command="php vendor/bin/phpunit --log-junit target/reports/junit.xml --coverage-clover target/reports/coverage.xml --coverage-html target/reports/coverage" passthru="true" checkreturn="true"/>
+    </target>
+</project>

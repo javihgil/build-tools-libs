@@ -15,7 +15,6 @@ namespace Composer;
  * Class Package
  *
  * @package Composer
- * @author  Javi H. Gil <https://github.com/javihgil>
  */
 class Package
 {
@@ -37,6 +36,7 @@ class Package
     public static function group($packageName)
     {
         $data = self::explodePackageName($packageName);
+
         return $data[0];
     }
 
@@ -48,10 +48,18 @@ class Package
     public static function name($packageName)
     {
         $data = self::explodePackageName($packageName);
+
         return $data[1];
     }
 
-
+    /**
+     * @param string $package
+     *
+     * @return string|null
+     *
+     * @example "package-build-file-v1.0.0-dev.tar.gz" => "1.0.0-dev"
+     * @example "package-release-file-v1.0.0.tar.gz" => "1.0.0"
+     */
     public static function getVersionFromFilename($package)
     {
         if (preg_match('/v([0-9]+.[0-9]+.[0-9]+(\-dev)?)/', $package, $matches)) {

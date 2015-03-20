@@ -15,38 +15,50 @@ namespace Composer;
  * Class Version
  *
  * @package Composer
- * @author  Javi H. Gil <https://github.com/javihgil>
  */
 class Version
 {
-
     /**
-     * @param $version
+     * @param string $version
      *
      * @return int
+     *
+     * @example "1.0.0-dev" => true
+     * @example "1.0.0" => false
      */
     public static function isDev($version)
     {
-        return preg_match('/\-dev$/i', $version);
+        return (bool) preg_match('/\-dev$/i', $version);
     }
 
     /**
-     * @param $version
+     * Returns development versions
+     *
+     * @param string $version
      *
      * @return string
+     *
+     * @example "1.0.0-dev" => "1.0.0-dev"
+     * @example "1.0.0" => "1.0.0-dev"
      */
     public static function dev($version)
     {
         if (!self::isDev($version)) {
             $version .= '-dev';
         }
+
         return $version;
     }
 
     /**
-     * @param $version
+     * Returns release versions
      *
-     * @return mixed
+     * @param string $version
+     *
+     * @return string
+     *
+     * @example "1.0.0-dev" => "1.0.0"
+     * @example "1.0.0" => "1.0.0"
      */
     public static function release($version)
     {
