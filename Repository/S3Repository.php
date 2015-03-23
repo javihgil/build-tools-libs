@@ -58,6 +58,7 @@ class S3Repository implements PackageRepositoryInterface
      * @var string
      */
     protected $s3cmdBin = '/usr/bin/s3cmd';
+    protected $s3cmdConfig = '~/.s3cfg';
 
     /**
      * @param \Project $project
@@ -78,6 +79,10 @@ class S3Repository implements PackageRepositoryInterface
 
         if ($this->project->getProperty('s3.cmd.bin')) {
             $this->s3cmdBin = $this->project->getProperty('s3.cmd.bin');
+        }
+
+        if ($this->project->getProperty('s3.cmd.config')) {
+            $this->s3cmdConfig = $this->project->getProperty('s3.cmd.config');
         }
 
         $this->checkCommand();
@@ -104,7 +109,7 @@ class S3Repository implements PackageRepositoryInterface
     protected function getPackageBucketList($bucket, $path, $name = '')
     {
         list($returnedString, $result) = Command::exec(
-            "s3cmd ls s3://$bucket/$path/"
+            "s3cmd ls s3://$bucket/$path/ --config=$this->s3cmdConfig"
         );
 
         $lines = explode("\n", $returnedString);
@@ -136,7 +141,7 @@ class S3Repository implements PackageRepositoryInterface
      */
     public function buildExists($remoteFile)
     {
-        list($returnedString, $result) = Command::exec("s3cmd ls s3://$this->buildBucketPath/$remoteFile | wc -l");
+        list($returnedString, $result) = Command::exec("s3cmd ls s3://$this->buildBucketPath/$remoteFile --config=$this->s3cmdConfig | wc -l");
 
         return (bool)$returnedString;
     }
@@ -149,7 +154,7 @@ class S3Repository implements PackageRepositoryInterface
     public function downloadBuild($remoteFile, $targetFile)
     {
         list($returnedString, $result) = Command::exec(
-            "s3cmd get s3://$this->buildBucketPath/$remoteFile $targetFile --force"
+            "s3cmd get s3://$this->buildBucketPath/$remoteFile $targetFile --force --config=$this->s3cmdConfig"
         );
 
         return (bool)$returnedString;
@@ -163,7 +168,7 @@ class S3Repository implements PackageRepositoryInterface
     public function uploadBuild($sourceFile, $remoteFile)
     {
         list($returnedString, $result) = Command::exec(
-            "s3cmd put $sourceFile s3://$this->buildBucketPath/$remoteFile"
+            "s3cmd put $sourceFile s3://$this->buildBucketPath/$remoteFile --config=$this->s3cmdConfig"
         );
 
         return (bool)$returnedString;
@@ -185,7 +190,7 @@ class S3Repository implements PackageRepositoryInterface
      */
     public function releaseExists($remoteFile)
     {
-        list($returnedString, $result) = Command::exec("s3cmd ls s3://$this->releaseBucketPath/$remoteFile | wc -l");
+        list($returnedString, $result) = Command::exec("s3cmd ls s3://$this->releaseBucketPath/$remoteFile --config=$this->s3cmdConfig | wc -l");
 
         return (bool)$returnedString;
     }
@@ -198,7 +203,7 @@ class S3Repository implements PackageRepositoryInterface
     public function downloadRelease($remoteFile, $targetFile)
     {
         list($returnedString, $result) = Command::exec(
-            "s3cmd get s3://$this->releaseBucketPath/$remoteFile $targetFile --skip-existing"
+            "s3cmd get s3://$this->releaseBucketPath/$remoteFile $targetFile --skip-existing --config=$this->s3cmdConfig"
         );
 
         return (bool)$returnedString;
@@ -212,7 +217,7 @@ class S3Repository implements PackageRepositoryInterface
     public function uploadRelease($sourceFile, $remoteFile)
     {
         list($returnedString, $result) = Command::exec(
-            "s3cmd put $sourceFile s3://$this->releaseBucketPath/$remoteFile"
+            "s3cmd put $sourceFile s3://$this->releaseBucketPath/$remoteFile --config=$this->s3cmdConfig"
         );
 
         return (bool)$returnedString;
