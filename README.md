@@ -326,7 +326,7 @@ custom dependencies and stores build and release packages.
     <property name="s3.build.bucket.path" value="bucket.name/builds"/>
     <property name="s3.release.bucket.path" value="bucket.name/releases"/>
     <property name="s3.cmd.bin" value="/usr/bin/s3cmd"/>
-    <property name="s3.cmd.config" value="~/.s3cnf"/>
+    <property name="s3.cmd.config" value="~/.s3cfg"/>
 ```
 
 #### Download Dependencies action
