@@ -82,7 +82,12 @@ class S3Repository implements PackageRepositoryInterface
         }
 
         if ($this->project->getProperty('s3.cmd.config')) {
-            $this->s3cmdConfig = $this->project->getProperty('s3.cmd.config');
+            $configFile = $this->project->getProperty('s3.cmd.config');
+            if (preg_match('/^\~/', $configFile)) {
+                $configFile = getenv('HOME') . substr($configFile, 1);
+            }
+
+            $this->s3cmdConfig = realpath($configFile);
         }
 
         $this->checkCommand();
@@ -97,6 +102,10 @@ class S3Repository implements PackageRepositoryInterface
 
         if (!(bool)$returnedString) {
             throw new \Exception("s3cmd command not available at $this->s3cmdBin.");
+        }
+
+        if (!file_exists($this->s3cmdConfig)) {
+            throw new \Exception("s3cmd configuration file was not found ($this->s3cmdConfig).");
         }
     }
 
