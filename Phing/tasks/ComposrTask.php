@@ -567,10 +567,10 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         $this->requireParam('pharFile');
         $this->requireParam('logFile');
         $this->requireParam('jsonFile');
-        $options = array(
+        $options = [
             "-d $this->dir",
             "--installed",
-        );
+        ];
 
         $composerJson = ComposerJson::createFromFile($this->jsonFile);
 
@@ -643,7 +643,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     public function install()
     {
         $this->requireParam('pharFile');
-        $options = array(
+        $options = [
             "-d $this->dir",
             $this->dev ? '' : '--no-dev',
             $this->preferDist ? '--prefer-dist' : '',
@@ -651,7 +651,7 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
             $this->noInteraction ? '--no-interaction' : '',
             $this->profile ? '--profile' : '',
             $this->verbosity ? "-$this->verbosity" : '',
-        );
+        ];
 
         if ($this->optimizeautoloader) {
             $options[] = '--optimize-autoloader';
@@ -710,8 +710,13 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         $composerJson = ComposerJson::createFromFile($this->getJsonFile());
 
         // check if composer.lock is valid for composer.json
-        $composerLock = ComposerLock::createFromFile($this->getLockFile());
-        $validLock = $composerLock->isValidForComposerJson($this->getJsonFile());
+        $composerLock = null;
+        if (file_exists($this->getLockFile())) {
+            $composerLock = ComposerLock::createFromFile($this->getLockFile());
+            $validLock = $composerLock->isValidForComposerJson($this->getJsonFile());
+        } else {
+            $validLock = false;
+        }
 
         // update version
         $version = $this->getVersion();
