@@ -12,11 +12,9 @@
 namespace Composer;
 
 /**
- * Class Lock
+ * Class ComposerLock
  *
  * @package Composer
- *
- * @author  Javi H. Gil <https://github.com/javihgil>
  */
 class ComposerLock
 {
@@ -27,18 +25,19 @@ class ComposerLock
     protected $lockArray;
 
     /**
-     * @param $lockString
+     * @param string $lockString
+     *
      * @throws \BuildException
      */
     public function __construct($lockString)
     {
-        $lock_decoded = json_decode($lockString, true);
+        $lockDecoded = json_decode($lockString, true);
 
-        if (!$lock_decoded) {
+        if (!$lockDecoded) {
             throw new \BuildException('Can not decode json string');
         }
 
-        $this->lockArray = $lock_decoded;
+        $this->lockArray = $lockDecoded;
 
         // convert packages into composerJson object
         foreach ($this->lockArray['packages'] as $i => $package) {
@@ -52,7 +51,8 @@ class ComposerLock
     /**
      * Saves data into composer.lock file
      *
-     * @param $filePath
+     * @param string $filePath
+     *
      * @throws \BuildException
      */
     public function save($filePath)
@@ -65,7 +65,7 @@ class ComposerLock
         $lockData = $this->lockArray;
 
         // convert packages into arrays
-        $lockData['packages'] = array();
+        $lockData['packages'] = [];
         /** @var ComposerJson $v */
         foreach ($this->lockArray['packages'] as $v) {
             $packageData = $v->getDataArray();
@@ -76,7 +76,7 @@ class ComposerLock
 
             $lockData['packages'][] = $packageData;
         }
-        $lockData['packages-dev'] = array();
+        $lockData['packages-dev'] = [];
         foreach ($this->lockArray['packages-dev'] as $v) {
             $packageData = $v->getDataArray();
 
@@ -94,8 +94,31 @@ class ComposerLock
         }
     }
 
-    public function hash()
+    /**
+     * @param string $composerJsonPath
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function isValidForComposerJson($composerJsonPath)
     {
+        if (!file_exists($composerJsonPath)) {
+            throw new \Exception("composer.json file not found at '$composerJsonPath'");
+        }
+
+        $md5 = md5_file($composerJsonPath);
+
+        return $md5 == $this->getHash();
+    }
+
+    /**
+     * Returns hash
+     *
+     * @return mixed
+     */
+    public function getHash()
+    {
+        return $this->lockArray['hash'];
     }
 
     /**
@@ -139,6 +162,7 @@ class ComposerLock
         foreach ($this->lockArray['packages'] as $i => $package) {
             if ($package === $current) {
                 $this->lockArray['packages'][$i] = $new;
+
                 return true;
             }
         }
@@ -146,6 +170,7 @@ class ComposerLock
         foreach ($this->lockArray['packages-dev'] as $i => $package) {
             if ($package === $current) {
                 $this->lockArray['packages-dev'][$i] = $new;
+
                 return true;
             }
         }
@@ -155,17 +180,26 @@ class ComposerLock
 
     /**
      * @param string $filePath
+     *
      * @return ComposerLock
      * @throws \BuildException
      */
     public static function createFromFile($filePath)
     {
         if (!file_exists($filePath)) {
-            throw new \BuildException(sprintf('Composer json file not found at "%s"', $filePath));
+            throw new \BuildException(sprintf('Composer lock file not found at "%s"', $filePath));
         }
 
-        $composer_json = file_get_contents($filePath);
+        $composerLock = file_get_contents($filePath);
 
-        return new ComposerLock($composer_json);
+        return new ComposerLock($composerLock);
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash($hash)
+    {
+        $this->lockArray['hash'] = $hash;
     }
 }

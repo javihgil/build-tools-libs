@@ -14,6 +14,7 @@ require_once "lib/autoload.php";
 use Task\AbstractTask;
 use Task\ActionTaskInterface;
 use Composer\ComposerJson;
+use Composer\ComposerLock;
 use Composer\Version;
 
 /**
@@ -703,22 +704,34 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
     public function versionUpdate()
     {
         $this->requireParam('jsonFile');
+        $this->requireParam('lockFile');
         $this->requireParam('version');
 
-        $version = $this->getVersion();
+        $composerJson = ComposerJson::createFromFile($this->getJsonFile());
 
+        // check if composer.lock is valid for composer.json
+        $composerLock = ComposerLock::createFromFile($this->getLockFile());
+        $validLock = $composerLock->isValidForComposerJson($this->getJsonFile());
+
+        // update version
+        $version = $this->getVersion();
         if ($this->forceVersionType == 'dev') {
             $version = Version::dev($version);
         } elseif ($this->forceVersionType == 'release') {
             $version = Version::release($version);
         }
-
-        $composerJson = ComposerJson::createFromFile($this->jsonFile);
         $composerJson->setVersion($version);
-        $composerJson->save($this->jsonFile);
+        $composerJson->save($this->getJsonFile());
 
+        if ($validLock) {
+            // update lock file with new composer.json's hash
+            $composerLock->setHash(md5_file($this->getJsonFile()));
+            $composerLock->save($this->getLockFile());
+        }
+
+        // log work
         $projectName = $composerJson->getName();
-        $this->log("Version update success to $version for $projectName in $this->jsonFile", Project::MSG_INFO);
+        $this->log("Version update success to $version for $projectName in {$this->getJsonFile()}", Project::MSG_INFO);
     }
 
     /**
@@ -777,9 +790,8 @@ class ComposrTask extends AbstractTask implements ActionTaskInterface
         $this->log("Checking composer.lock file...", Project::MSG_INFO);
 
         if (file_exists($this->getLockFile())) {
-            $md5 = md5_file($this->getJsonFile());
-            $lock = json_decode(file_get_contents($this->getLockFile()), true);
-            $updateRequired = $md5 != $lock['hash'];
+            $lockFile = ComposerLock::createFromFile($this->getLockFile());
+            $updateRequired = ! $lockFile->isValidForComposerJson($this->getJsonFile());
 
             if ($updateRequired) {
                 $this->log("Composer.json file's md5 is different than lock's hash", Project::MSG_WARN);
