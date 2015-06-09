@@ -76,6 +76,13 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
     protected $packageRegex;
 
     /**
+     * Stores latest package into repository
+     *
+     * @var bool
+     */
+    protected $latest = false;
+
+    /**
      * @param string $action
      */
     public function setAction($action)
@@ -180,6 +187,26 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
     public function setDriver($driver)
     {
         $this->driver = $driver;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLatest()
+    {
+        return $this->latest;
+    }
+
+    /**
+     * @param boolean $latest
+     *
+     * @return $this
+     */
+    public function setLatest($latest)
+    {
+        $this->latest = $latest;
+
         return $this;
     }
 
@@ -534,6 +561,8 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
 
         $remoteFile = "$name-v$version.$format";
         $remoteSha1File = "$name-v$version.$format.sha1";
+        $remoteLatestFile = "$name-latest.$format";
+        $remoteLatestSha1File = "$name-latest.$format.sha1";
         $localFile = $this->file;
         $localSha1File = "{$this->file}.sha1";
 
@@ -546,6 +575,16 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                     $this->log("Upload private build sha1 file $localSha1File to $remoteSha1File");
                     $this->getDriver()->uploadBuild($localSha1File, $remoteSha1File);
                 }
+
+                if ($this->latest) {
+                    $this->log("Upload private LATEST build $localFile to $remoteLatestFile");
+                    $this->getDriver()->uploadBuild($localFile, $remoteLatestFile);
+
+                    if ($this->sha1) {
+                        $this->log("Upload private LATEST build sha1 file $localSha1File to $remoteLatestSha1File");
+                        $this->getDriver()->uploadBuild($localSha1File, $remoteLatestSha1File);
+                    }
+                }
                 break;
 
             case 'release':
@@ -555,6 +594,16 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
                 if ($this->sha1) {
                     $this->log("Upload private release sha1 file $localSha1File to $remoteSha1File");
                     $this->getDriver()->uploadRelease($localSha1File, $remoteSha1File);
+                }
+
+                if ($this->latest) {
+                    $this->log("Upload private LATEST release $localFile to $remoteLatestFile");
+                    $this->getDriver()->uploadRelease($localFile, $remoteLatestFile);
+
+                    if ($this->sha1) {
+                        $this->log("Upload private LATEST release sha1 file $localSha1File to $remoteLatestSha1File");
+                        $this->getDriver()->uploadRelease($localSha1File, $remoteLatestSha1File);
+                    }
                 }
                 break;
         }
