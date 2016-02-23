@@ -516,8 +516,8 @@ class RepositoryTask extends AbstractTask implements ActionTaskInterface
         $version = $this->getVersion();
         $format = 'tar.gz';
 
-        $remoteFile = "$name-v$version.$format";
-        $remoteSha1File = "$name-v$version.$format.sha1";
+        $remoteFile = "$name-$version.$format";
+        $remoteSha1File = "$name-$version.$format.sha1";
         $localFile = $this->file;
         $localSha1File = "{$this->file}.sha1";
 
